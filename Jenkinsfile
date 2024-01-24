@@ -28,16 +28,16 @@ pipeline {
                 withSonarQubeEnv('sq1') {
                     withEnv(['PATH+SONAR=$SCANNER_HOME/bin']) {
                         sh '''
-                        source $VENV/bin/activate
-                        sonar-scanner -Dsonar.python.coverage.reportPaths=coverage.xml \
-                                      -Dsonar.projectKey=sonar_test \
-                                      -Dsonar.host.url=http://192.168.52.92:9000 \
-                                      -Dsonar.login=squ_52b64e31e1a72ac2b9fb023ca0b214847d49b7da
+                        /bin/bash -c "source $VENV/bin/activate && sonar-scanner -Dsonar.python.coverage.reportPaths=coverage.xml \
+                                    -Dsonar.projectKey=sonar_test \
+                                    -Dsonar.host.url=http://192.168.52.92:9000 \
+                                    -Dsonar.login=squ_52b64e31e1a72ac2b9fb023ca0b214847d49b7da"
                         '''
                     }
                 }
             }
         }
+
     }
     
     post {
