@@ -44,10 +44,12 @@ pipeline {
         // }
         stage('Sonar Analysis') {
             steps {
+                withSonarQubeEnv('sonar-server-1') {
                 sh "mvn clean verify"
                 sh ''' mvn sonar:sonar -Dsonar-url=http://192.168.52.92:9000/ \
                 -Dsonar.login=squ_52b64e31e1a72ac2b9fb023ca0b214847d49b7da -Dsonar.projectName=sonar_test \
                 -Dsonar.Java.binaries=. -Dsonar.projectKey=sonar_test '''
+                }
             }
         }
     }
