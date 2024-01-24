@@ -40,8 +40,7 @@ pipeline {
                 withSonarQubeEnv('sq1') {
                     // Run SonarQube analysis
                     sh '''
-                    #!/bin/bash
-                    source $VENV/bin/activate
+                    /bin/bash -c source $VENV/bin/activate
                     sonar-scanner -Dsonar.python.coverage.reportPaths=coverage.xml \
                                   -Dsonar.projectKey=sonar_test \
                                   -Dsonar.host.url=http://192.168.52.92:9000 \
