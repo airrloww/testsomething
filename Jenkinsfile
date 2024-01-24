@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        SCANNER_HOME=tool 'sq1'
+        SCANNER_HOME=tool 'sonar-scanner-1'
     }
 
     stages {
@@ -44,7 +44,7 @@ pipeline {
         // }
         stage('Sonar Analysis') {
             steps {
-                withSonarQubeEnv('sonar-scanner-1') {
+                withSonarQubeEnv('sq1') {
                 sh "mvn clean verify"
                 sh ''' mvn sonar:sonar -Dsonar-url=http://192.168.52.92:9000/ \
                 -Dsonar.login=squ_52b64e31e1a72ac2b9fb023ca0b214847d49b7da -Dsonar.projectName=sonar_test \
