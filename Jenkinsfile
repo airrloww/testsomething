@@ -5,6 +5,10 @@ pipeline {
         maven 'maven3'
     }
 
+    environment {
+        SCANNER_HOME=tool 'sonar-scanner-1'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -19,6 +23,7 @@ pipeline {
         //         }
         //     }
         // }
+    
         stage('Test') {
             steps {
                 script {
