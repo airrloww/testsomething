@@ -1,12 +1,10 @@
 pipeline {
     agent any
-    tools {
-        jdk 'openjdk-11'
-        maven 'maven3'
-    }
 
     environment {
-        SCANNER_HOME=tool 'sonar-scanner-1'
+        SCANNER_HOME = tool 'sonar-scanner-1'
+        // Define virtualenv directory
+        VENV = 'venv'
     }
 
     stages {
@@ -15,44 +13,46 @@ pipeline {
                 checkout scm
             }
         }
-        // stage('Build Docker Image') {
-        //     steps {
-        //         script {
-        //             // Define the image name and tag
-        //             def appImage = docker.build("flask-app:${env.BUILD_ID}")
-        //         }
-        //     }
-        // }
-    
+        
+        stage('Setup Python Environment') {
+            steps {
+                // Create a virtual environment and install dependencies
+                sh '''
+                python -m venv $VENV
+                source $VENV/bin/activate
+                pip install -r requirements.txt
+                '''
+            }
+        }
+
         stage('Test') {
             steps {
                 script {
-                    echo 'no tests to run'
+                    echo 'Running tests...'
+                    sh '''
+                    source $VENV/bin/activate
+                    pytest
+                    '''
                 }
             }
         }
-        // stage('Push Image') {
-        //     steps {
-        //         script {
-        //             echo 'Pushing to registry ...'
-        //             // docker.withRegistry('https://registry.hub.docker.com', 'docker-credentials-id') {
-        //             //     appImage.push("${env.BUILD_ID}")
-        //             //     appImage.push("latest")
-        //             // }
-        //         }
-        //     }
-        // }
+        
         stage('Sonar Analysis') {
             steps {
                 withSonarQubeEnv('sq1') {
-                sh "mvn clean verify"
-                sh ''' mvn sonar:sonar -Dsonar-url=http://192.168.52.92:9000/ \
-                -Dsonar.login=squ_52b64e31e1a72ac2b9fb023ca0b214847d49b7da -Dsonar.projectName=sonar_test \
-                -Dsonar.Java.binaries=. -Dsonar.projectKey=sonar_test '''
+                    // Run SonarQube analysis
+                    sh '''
+                    source $VENV/bin/activate
+                    sonar-scanner -Dsonar.python.coverage.reportPaths=coverage.xml \
+                                  -Dsonar.projectKey=sonar_test \
+                                  -Dsonar.host.url=http://192.168.52.92:9000 \
+                                  -Dsonar.login=squ_52b64e31e1a72ac2b9fb023ca0b214847d49b7da
+                    '''
                 }
             }
         }
     }
+    
     post {
         success {
             echo 'Build succeeded!'
