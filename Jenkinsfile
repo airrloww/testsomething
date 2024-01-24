@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     tools {
         jdk: 'jdk11'
         maven: 'mazen'
@@ -12,14 +11,14 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    // Define the image name and tag
-                    def appImage = docker.build("flask-app:${env.BUILD_ID}")
-                }
-            }
-        }
+        // stage('Build Docker Image') {
+        //     steps {
+        //         script {
+        //             // Define the image name and tag
+        //             def appImage = docker.build("flask-app:${env.BUILD_ID}")
+        //         }
+        //     }
+        // }
         stage('Test') {
             steps {
                 script {
@@ -27,17 +26,17 @@ pipeline {
                 }
             }
         }
-        stage('Push Image') {
-            steps {
-                script {
-                    echo 'Pushing to registry ...'
-                    // docker.withRegistry('https://registry.hub.docker.com', 'docker-credentials-id') {
-                    //     appImage.push("${env.BUILD_ID}")
-                    //     appImage.push("latest")
-                    // }
-                }
-            }
-        }
+        // stage('Push Image') {
+        //     steps {
+        //         script {
+        //             echo 'Pushing to registry ...'
+        //             // docker.withRegistry('https://registry.hub.docker.com', 'docker-credentials-id') {
+        //             //     appImage.push("${env.BUILD_ID}")
+        //             //     appImage.push("latest")
+        //             // }
+        //         }
+        //     }
+        // }
         stage('Sonar Analysis') {
             steps {
                 sh "mvn clean package"
