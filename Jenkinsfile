@@ -20,7 +20,7 @@ pipeline {
                 sh '''
                 #!/bin/bash
                 python3 -m venv $VENV
-                /bin/bash -c source $VENV/bin/activate
+                source $VENV/bin/activate
                 pip install -r requirements.txt
                 '''
             }
