@@ -18,7 +18,7 @@ pipeline {
             steps {
                 // Create a virtual environment and install dependencies
                 sh '''
-                python -m venv $VENV
+                python3 -m venv $VENV
                 source $VENV/bin/activate
                 pip install -r requirements.txt
                 '''
