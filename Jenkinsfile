@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    tools {
+        jdk: 'jdk11'
+        maven: 'mazen'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -18,7 +23,6 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Run tests here
                     echo 'no tests to run'
                 }
             }
@@ -32,6 +36,14 @@ pipeline {
                     //     appImage.push("latest")
                     // }
                 }
+            }
+        }
+        stage('Sonar Analysis') {
+            steps {
+                sh "mvn clean package"
+                sh ''' mvn sonar:sonar -Dsonar-url=http://192.168.52.92:9000/ \
+                -Dsonar.login=squ_52b64e31e1a72ac2b9fb023ca0b214847d49b7da -Dsonar.projectName=sonar_test \
+                -Dsonar.Java.binaries=. -Dsonar.projectKey=sonar_test '''
             }
         }
     }
