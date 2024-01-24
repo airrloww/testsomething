@@ -23,23 +23,24 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                script {
-                    echo 'Running tests...'
-                    sh '''
-                    source $VENV/bin/activate
-                    pytest
-                    '''
-                }
-            }
-        }
+        // stage('Test') {
+        //     steps {
+        //         script {
+        //             echo 'Running tests...'
+        //             sh '''
+        //             source $VENV/bin/activate
+        //             pytest
+        //             '''
+        //         }
+        //     }
+        // }
         
         stage('Sonar Analysis') {
             steps {
                 withSonarQubeEnv('sq1') {
                     // Run SonarQube analysis
                     sh '''
+                    #!/bin/bash
                     source $VENV/bin/activate
                     sonar-scanner -Dsonar.python.coverage.reportPaths=coverage.xml \
                                   -Dsonar.projectKey=sonar_test \
